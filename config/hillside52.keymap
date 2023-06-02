@@ -34,7 +34,8 @@
 #define Paste  LC(V)
 #define Redo   LC(Y)
 
-#define HT(layer, key) &ht_mo_kp layer key
+#define MT(layer, key) &ht_mo_kp layer key
+#define HT(keya, keyb) &ht_kp_kp keya keyb
 #define WM(key, num) &wm_##key##_##num
 #define WIN_MORPH_MACRO(key, num) \
         wm_##key##_##num: wm_##key##_##num { \
@@ -75,11 +76,11 @@
                         mods = <(MOD_LSFT)>;
                 };        
                 
-                esc_grave: esc_grave {
-                        label = "esc_grave";
+                grave_tilde: grave_tilde {
+                        label = "grave_tilde";
                         compatible = "zmk,behavior-mod-morph";
                         #binding-cells = <0>;
-                        bindings = <&kp ESC>, <&kp GRAVE>;
+                        bindings = <&kp GRAVE>, <&kp TILDE>;
                         mods = <(MOD_RSFT)>;
                 };
 
@@ -87,9 +88,20 @@
                         label = "ht_mo_kp";
                         compatible = "zmk,behavior-hold-tap";
                         #binding-cells = <2>;
+                        quick-tap-ms = <200>;       
+                        flavor = "tap-preferred";
+                        tapping-term-ms = <100>;
+                        bindings = <&mo>, <&kp>;
+                };
+
+                ht_kp_kp: ht_kp_kp {
+                        label = "ht_kp_kp";
+                        compatible = "zmk,behavior-hold-tap";
+                        #binding-cells = <2>;
+                        quick-tap-ms = <200>;       
                         flavor = "hold-preferred";
                         tapping-term-ms = <200>;
-                        bindings = <&mo>, <&kp>;
+                        bindings = <&kp>, <&kp>;
                 };
                 
         };
@@ -99,20 +111,20 @@
 
                 default_layer {
                         bindings = <
-&esc_grave    &kp  Q        WM(W, 7)      WM(E, 8)      WM(R, 9)      &kp  T                                                                                       &kp  Y            &kp  U        &kp  I        &kp  O        &kp  P        &kp  MINUS
-&lsft_sqt     WM(A, 0)      WM(S, 1)      WM(D, 2)      WM(F, 3)      &kp  G                                                                                       &kp  H            &kp  J        &kp  K        &kp  L        &kp  SEMI     &rsft_dqt
-&kp  LALT     &kp  Z        WM(X, 4)      WM(C, 5)      WM(V, 6)      &kp  B        XXXXXXXXXX                                                  XXXXXXXXXX         &kp  N            &kp  M        &kp  COMMA    &kp  DOT      &kp  FSLH     &kp  RALT
-XXXXXXXXXX    XXXXXXXXXX    XXXXXXXXXX                  XXXXXXXXXX    XXXXXXXXXX    &kp LGUI            &kp  BSPC             HT(SYM_L, SPACE)  HT(NUM_L, ENTER)   XXXXXXXXXX        XXXXXXXXXX                  XXXXXXXXXX    XXXXXXXXXX    XXXXXXXXXX
+&kp  GRAVE    &kp  Q        WM(W, 7)      WM(E, 8)      WM(R, 9)      &kp  T                                                                                            &kp  Y            &kp  U        &kp  I        &kp  O        &kp  P        &kp  MINUS
+&lsft_sqt     WM(A, 0)      WM(S, 1)      WM(D, 2)      WM(F, 3)      &kp  G                                                                                            &kp  H            &kp  J        &kp  K        &kp  L        &kp  SEMI     &rsft_dqt
+&kp  LALT     &kp  Z        WM(X, 4)      WM(C, 5)      WM(V, 6)      &kp  B             XXXXXXXXXX                                                  XXXXXXXXXX         &kp  N            &kp  M        &kp  COMMA    &kp  DOT      &kp  FSLH     &kp  RALT
+XXXXXXXXXX    XXXXXXXXXX    XXXXXXXXXX                  XXXXXXXXXX    HT(LCTRL, ESC)     MT(NAV_L, BSPC)      HT(LGUI, TAB)        MT(SYM_L, ENTER)  MT(NUM_L, SPACE)   HT(RCTRL, DEL)    XXXXXXXXXX                  XXXXXXXXXX    XXXXXXXXXX    XXXXXXXXXX
                         >;
                         sensor-bindings = <&inc_dec_kp C_VOL_UP C_VOL_DN &inc_dec_kp PG_UP PG_DN>;      
                 };
 
                 num_layer {
                         bindings = <
-VVVVVVVVVV    &kp  LBKT     &kp  N7       &kp  N8       &kp  N9       &kp  RBKT                                                                                    VVVVVVVVVV        VVVVVVVVVV    VVVVVVVVVV    VVVVVVVVVV    VVVVVVVVVV    VVVVVVVVVV
-VVVVVVVVVV    &kp  N0       &kp  N1       &kp  N2       &kp  N3       &kp  BSLH                                                                                    VVVVVVVVVV        VVVVVVVVVV    VVVVVVVVVV    VVVVVVVVVV    VVVVVVVVVV    VVVVVVVVVV
-VVVVVVVVVV    &kp  GRAVE    &kp  N4       &kp  N5       &kp  N6       &kp  EQUAL    VVVVVVVVVV                                                  VVVVVVVVVV         VVVVVVVVVV        VVVVVVVVVV    VVVVVVVVVV    VVVVVVVVVV    VVVVVVVVVV    VVVVVVVVVV
-VVVVVVVVVV    VVVVVVVVVV    VVVVVVVVVV                  VVVVVVVVVV    VVVVVVVVVV    &kp UNDER           &kp TAB               VVVVVVVVVV        ____NA____         VVVVVVVVVV        VVVVVVVVVV                  VVVVVVVVVV    VVVVVVVVVV    VVVVVVVVVV
+VVVVVVVVVV    &kp  LBKT     &kp  N7       &kp  N8       &kp  N9       &kp  RBKT                                                                                         VVVVVVVVVV        VVVVVVVVVV    VVVVVVVVVV    &kp COLON     VVVVVVVVVV    VVVVVVVVVV
+VVVVVVVVVV    &kp  N0       &kp  N1       &kp  N2       &kp  N3       &kp  BSLH                                                                                         VVVVVVVVVV        &kp  ENTER    &kp  ESC      &kp  RCTRL    &kp  RALT     VVVVVVVVVV
+VVVVVVVVVV    &kp  GRAVE    &kp  N4       &kp  N5       &kp  N6       &kp  EQUAL         VVVVVVVVVV                                                  VVVVVVVVVV         VVVVVVVVVV        VVVVVVVVVV    VVVVVVVVVV    VVVVVVVVVV    VVVVVVVVVV    VVVVVVVVVV
+VVVVVVVVVV    VVVVVVVVVV    VVVVVVVVVV                  VVVVVVVVVV    VVVVVVVVVV         &kp COLON           &kp TAB               VVVVVVVVVV        ____NA____         VVVVVVVVVV        VVVVVVVVVV                  VVVVVVVVVV    VVVVVVVVVV    VVVVVVVVVV
                         >;
 			
                         sensor-bindings = <&inc_dec_kp C_VOL_UP C_VOL_DN &inc_dec_kp PG_UP PG_DN>;
@@ -120,10 +132,10 @@ VVVVVVVVVV    VVVVVVVVVV    VVVVVVVVVV                  VVVVVVVVVV    VVVVVVVVVV
 
                 sym_layer {
                         bindings = <
-VVVVVVVVVV    &kp LBRC      &kp AMPS      &kp ASTRK     &kp LPAR      &kp RBRC                                                                                     VVVVVVVVVV        VVVVVVVVVV    VVVVVVVVVV    VVVVVVVVVV    VVVVVVVVVV    VVVVVVVVVV
-VVVVVVVVVV    &kp TILDE     &kp EXCL      &kp AT        &kp POUND     &kp PIPE                                                                                     VVVVVVVVVV        VVVVVVVVVV    VVVVVVVVVV    VVVVVVVVVV    VVVVVVVVVV    VVVVVVVVVV
-VVVVVVVVVV    &kp COLON     &kp DOLLAR    &kp PERCENT   &kp CARET     &kp PLUS      VVVVVVVVVV                                                  VVVVVVVVVV         VVVVVVVVVV        VVVVVVVVVV    VVVVVVVVVV    VVVVVVVVVV    VVVVVVVVVV    VVVVVVVVVV
-VVVVVVVVVV    VVVVVVVVVV    VVVVVVVVVV                  VVVVVVVVVV    &kp RPAR      &kp UNDER           &kp TAB               ____NA____        VVVVVVVVVV         VVVVVVVVVV        VVVVVVVVVV                  VVVVVVVVVV    VVVVVVVVVV    VVVVVVVVVV
+VVVVVVVVVV    &kp LBRC      &kp AMPS      &kp ASTRK     &kp LPAR      &kp RBRC                                                                                          VVVVVVVVVV        VVVVVVVVVV    VVVVVVVVVV    &kp COLON     VVVVVVVVVV    VVVVVVVVVV
+VVVVVVVVVV    &kp RPAR      &kp EXCL      &kp AT        &kp POUND     &kp PIPE                                                                                          VVVVVVVVVV        &kp  ENTER    &kp  ESC      &kp  RCTRL    &kp  RALT     VVVVVVVVVV
+VVVVVVVVVV    &kp COLON     &kp DOLLAR    &kp PERCENT   &kp CARET     &kp PLUS           VVVVVVVVVV                                                  VVVVVVVVVV         VVVVVVVVVV        VVVVVVVVVV    VVVVVVVVVV    VVVVVVVVVV    VVVVVVVVVV    VVVVVVVVVV
+VVVVVVVVVV    VVVVVVVVVV    VVVVVVVVVV                  VVVVVVVVVV    &kp LT             &kp GT              &kp TAB               ____NA____        VVVVVVVVVV         VVVVVVVVVV        VVVVVVVVVV                  VVVVVVVVVV    VVVVVVVVVV    VVVVVVVVVV
                         >;
 			
                         sensor-bindings = <&inc_dec_kp C_VOL_UP C_VOL_DN &inc_dec_kp PG_UP PG_DN>;      
@@ -131,10 +143,10 @@ VVVVVVVVVV    VVVVVVVVVV    VVVVVVVVVV                  VVVVVVVVVV    &kp RPAR  
 
                nav_layer {
                         bindings = <
-VVVVVVVVVV    VVVVVVVVVV    VVVVVVVVVV    VVVVVVVVVV    VVVVVVVVVV    VVVVVVVVVV                                                                                   VVVVVVVVVV        VVVVVVVVVV    &kp PG_UP     VVVVVVVVVV    VVVVVVVVVV    VVVVVVVVVV
-VVVVVVVVVV    VVVVVVVVVV    VVVVVVVVVV    VVVVVVVVVV    VVVVVVVVVV    VVVVVVVVVV                                                                                   &kp LEFT          &kp DOWN      &kp UP        &kp RIGHT     VVVVVVVVVV    VVVVVVVVVV
-VVVVVVVVVV    VVVVVVVVVV    VVVVVVVVVV    VVVVVVVVVV    VVVVVVVVVV    VVVVVVVVVV    VVVVVVVVVV                                                  VVVVVVVVVV         VVVVVVVVVV        &kp HOME      &kp PG_DN     &kp END       VVVVVVVVVV    VVVVVVVVVV
-VVVVVVVVVV    VVVVVVVVVV    VVVVVVVVVV                  VVVVVVVVVV    VVVVVVVVVV    VVVVVVVVVV          VVVVVVVVVV            VVVVVVVVVV        ____NA____         VVVVVVVVVV        VVVVVVVVVV                  VVVVVVVVVV    VVVVVVVVVV    VVVVVVVVVV
+VVVVVVVVVV    VVVVVVVVVV    VVVVVVVVVV    VVVVVVVVVV    VVVVVVVVVV    VVVVVVVVVV                                                                                        VVVVVVVVVV        VVVVVVVVVV    &kp PG_UP     VVVVVVVVVV    VVVVVVVVVV    VVVVVVVVVV
+VVVVVVVVVV    VVVVVVVVVV    VVVVVVVVVV    VVVVVVVVVV    VVVVVVVVVV    VVVVVVVVVV                                                                                        &kp LEFT          &kp DOWN      &kp UP        &kp RIGHT     VVVVVVVVVV    VVVVVVVVVV
+VVVVVVVVVV    VVVVVVVVVV    VVVVVVVVVV    VVVVVVVVVV    VVVVVVVVVV    VVVVVVVVVV         VVVVVVVVVV                                                  VVVVVVVVVV         VVVVVVVVVV        &kp HOME      &kp PG_DN     &kp END       VVVVVVVVVV    VVVVVVVVVV
+VVVVVVVVVV    VVVVVVVVVV    VVVVVVVVVV                  VVVVVVVVVV    VVVVVVVVVV         ____NA____          VVVVVVVVVV            VVVVVVVVVV        VVVVVVVVVV         VVVVVVVVVV        VVVVVVVVVV                  VVVVVVVVVV    VVVVVVVVVV    VVVVVVVVVV
                         >;
 			
                         sensor-bindings = <&inc_dec_kp C_VOL_UP C_VOL_DN &inc_dec_kp PG_UP PG_DN>;      
@@ -142,10 +154,10 @@ VVVVVVVVVV    VVVVVVVVVV    VVVVVVVVVV                  VVVVVVVVVV    VVVVVVVVVV
 
                 empty_layer {
                         bindings = <
-VVVVVVVVVV    VVVVVVVVVV    VVVVVVVVVV    VVVVVVVVVV    VVVVVVVVVV    VVVVVVVVVV                                                                                   VVVVVVVVVV        VVVVVVVVVV    VVVVVVVVVV    VVVVVVVVVV    VVVVVVVVVV    VVVVVVVVVV
-VVVVVVVVVV    VVVVVVVVVV    VVVVVVVVVV    VVVVVVVVVV    VVVVVVVVVV    VVVVVVVVVV                                                                                   VVVVVVVVVV        VVVVVVVVVV    VVVVVVVVVV    VVVVVVVVVV    VVVVVVVVVV    VVVVVVVVVV
-VVVVVVVVVV    VVVVVVVVVV    VVVVVVVVVV    VVVVVVVVVV    VVVVVVVVVV    VVVVVVVVVV    VVVVVVVVVV                                                  VVVVVVVVVV         VVVVVVVVVV        VVVVVVVVVV    VVVVVVVVVV    VVVVVVVVVV    VVVVVVVVVV    VVVVVVVVVV
-VVVVVVVVVV    VVVVVVVVVV    VVVVVVVVVV                  VVVVVVVVVV    VVVVVVVVVV    VVVVVVVVVV          VVVVVVVVVV            VVVVVVVVVV        VVVVVVVVVV         VVVVVVVVVV        VVVVVVVVVV                  VVVVVVVVVV    VVVVVVVVVV    VVVVVVVVVV
+VVVVVVVVVV    VVVVVVVVVV    VVVVVVVVVV    VVVVVVVVVV    VVVVVVVVVV    VVVVVVVVVV                                                                                        VVVVVVVVVV        VVVVVVVVVV    VVVVVVVVVV    VVVVVVVVVV    VVVVVVVVVV    VVVVVVVVVV
+VVVVVVVVVV    VVVVVVVVVV    VVVVVVVVVV    VVVVVVVVVV    VVVVVVVVVV    VVVVVVVVVV                                                                                        VVVVVVVVVV        VVVVVVVVVV    VVVVVVVVVV    VVVVVVVVVV    VVVVVVVVVV    VVVVVVVVVV
+VVVVVVVVVV    VVVVVVVVVV    VVVVVVVVVV    VVVVVVVVVV    VVVVVVVVVV    VVVVVVVVVV         VVVVVVVVVV                                                  VVVVVVVVVV         VVVVVVVVVV        VVVVVVVVVV    VVVVVVVVVV    VVVVVVVVVV    VVVVVVVVVV    VVVVVVVVVV
+VVVVVVVVVV    VVVVVVVVVV    VVVVVVVVVV                  VVVVVVVVVV    VVVVVVVVVV         VVVVVVVVVV          VVVVVVVVVV            VVVVVVVVVV        VVVVVVVVVV         VVVVVVVVVV        VVVVVVVVVV                  VVVVVVVVVV    VVVVVVVVVV    VVVVVVVVVV
                         >;
 			
                         sensor-bindings = <&inc_dec_kp C_VOL_UP C_VOL_DN &inc_dec_kp PG_UP PG_DN>;
